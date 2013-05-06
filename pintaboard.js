@@ -144,13 +144,14 @@ function pinAddBookmark(args) {
 	desc: args["-desc"] || "",
 	tags: args["-tags"] || [],
 	title: args["-title"] || (args.length === 0 ? buffer.title : null),
-	url: args.length === 0 ? buffer.URL: args[0]
+	url: args.length === 0 ? buffer.URL: args[0],
+	toread: args["-toread"] == "yes" ? "yes" : "no"
     };
     let urlopts = ["url=" + encodeURIComponent(opts['url']),
 		   "description=" + encodeURIComponent(opts['title']),
 		   "tags=" + encodeURIComponent(opts['tags'].join(" ")),
-		   "extended=" + encodeURIComponent(opts['desc'])];
-
+		   "extended=" + encodeURIComponent(opts['desc']),
+		   "toread=" + encodeURIComponent(opts['toread'])];
     pinHttpsGet(pinurladd,
 		urlopts,
 		function (xmlhttp) {
@@ -185,6 +186,11 @@ function pinCompleteTags(ctx, args){
     return;
 }
 
+function pinYesNoCompleter(ctx, args) {
+	ctx.keys = {text: "value", description: "description"};
+	ctx.completions = [{value: "no", description: "no"}, {value: "yes", description: "yes"}]
+	return;
+}
 
 function initPintaboard() {
 
@@ -212,13 +218,19 @@ function initPintaboard() {
 	description: "Bookmark description",
 	type: CommandOption.STRING
     };
+  const pintoreadarg = {
+	names: ["-toread", "-r"],
+	description: "Mark the bookmark as unread (read later)",
+	completer: pinYesNoCompleter,
+	type: CommandOption.LIST
+    };
 
     group.commands.add(['pinbookmark','pb'],
 		       "Add bookmarks to pinboard",
 		       pinAddBookmark,
 		       {   argCount: "?",
 			   bang: true,
-			   options: [pintagarg, pintitlearg, pindescriptionarg],
+			   options: [pintagarg, pintitlearg, pindescriptionarg, pintoreadarg],
 			   completer: pinCompleteBookmark,
 			   privateData: true 
 		       },
