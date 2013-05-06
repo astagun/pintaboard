@@ -38,6 +38,7 @@ bookmarking storage with service to [[Pinboard.in]].
   | -desc  | Text string                  |
   | -tags  | Comma-separated list of tags |
   | -title | Page title                   |
+  | -toread | yes/no                      |
   
 
   By default, the =a= key is mapped to run someting like the
@@ -69,3 +70,8 @@ bookmarking storage with service to [[Pinboard.in]].
    shortcut. But, useful to know if the page title is not what you
    want to store in pinboard. The text here becomes the text for the
    link stored.
+
+** ToRead
+
+  If =-toread== is set to =yes=, the bookmark will be marked as "read later".
+  Default value is =no=.
